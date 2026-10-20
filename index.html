@@ -46,19 +46,9 @@ a:focus, a:hover {
 </style>
 </head>
 <body>
-<h1>MY TV</h1>
-<p>Your apps. Your layout. No recommendations.</p>
-<div class="grid">
-<a href="https://www.youtube.com/"><span class="icon">▶</span>YouTube</a>
-<a href="https://www.netflix.com/"><span class="icon">▣</span>Netflix</a>
-<a href="https://www.disneyplus.com/"><span class="icon">✦</span>Disney+</a>
-<a href="https://www.plex.tv/"><span class="icon">▶</span>Plex</a>
-<a href="https://open.spotify.com/"><span class="icon">♫</span>Music</a>
-<a href="https://www.google.com/"><span class="icon">⌕</span>Web</a>
-</div>
 <script>
 (function () {
-  const tiles = document.querySelectorAll('.grid a');
+  const tiles = Array.from(document.querySelectorAll('.grid a'));
   if (!tiles.length) return;
 
   let selected = 0;
@@ -70,25 +60,57 @@ a:focus, a:hover {
     });
   }
 
-  document.addEventListener('keydown', function (event) {
-    const key = event.key;
-    if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Enter', ' '].includes(key)) {
-      event.preventDefault();
-    }
+  function move(direction) {
+    const current = tiles[selected].getBoundingClientRect();
+    let best = -1;
+    let bestScore = Infinity;
 
-    if (key === 'ArrowRight' || key === 'ArrowDown') {
-      selected = (selected + 1) % tiles.length;
-      highlight();
-    } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
-      selected = (selected - 1 + tiles.length) % tiles.length;
-      highlight();
-    } else if (key === 'Enter' || key === ' ') {
+    tiles.forEach((tile, i) => {
+      if (i === selected) return;
+      const r = tile.getBoundingClientRect();
+      const dx = (r.left + r.width / 2) - (current.left + current.width / 2);
+      const dy = (r.top + r.height / 2) - (current.top + current.height / 2);
+
+      let primary, secondary;
+      if (direction === 'ArrowRight') {
+        if (dx <= 5) return;
+        primary = dx; secondary = Math.abs(dy);
+      } else if (direction === 'ArrowLeft') {
+        if (dx >= -5) return;
+        primary = -dx; secondary = Math.abs(dy);
+      } else if (direction === 'ArrowDown') {
+        if (dy <= 5) return;
+        primary = dy; secondary = Math.abs(dx);
+      } else {
+        if (dy >= -5) return;
+        primary = -dy; secondary = Math.abs(dx);
+      }
+
+      const score = primary + secondary * 2;
+      if (score < bestScore) {
+        bestScore = score;
+        best = i;
+      }
+    });
+
+    if (best >= 0) selected = best;
+    highlight();
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(event.key)) {
+      event.preventDefault();
+      move(event.key);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
       tiles[selected].click();
     }
   });
 
   highlight();
 })();
+</script>
+
 </script>
 
 </body>
