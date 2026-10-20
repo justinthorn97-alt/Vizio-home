@@ -56,5 +56,40 @@ a:focus, a:hover {
 <a href="https://open.spotify.com/"><span class="icon">♫</span>Music</a>
 <a href="https://www.google.com/"><span class="icon">⌕</span>Web</a>
 </div>
+<script>
+(function () {
+  const tiles = document.querySelectorAll('.grid a');
+  if (!tiles.length) return;
+
+  let selected = 0;
+
+  function highlight() {
+    tiles.forEach((tile, i) => {
+      tile.style.outline = i === selected ? '4px solid #8db8ff' : 'none';
+      tile.style.background = i === selected ? '#343e54' : '#242a38';
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    const key = event.key;
+    if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Enter', ' '].includes(key)) {
+      event.preventDefault();
+    }
+
+    if (key === 'ArrowRight' || key === 'ArrowDown') {
+      selected = (selected + 1) % tiles.length;
+      highlight();
+    } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+      selected = (selected - 1 + tiles.length) % tiles.length;
+      highlight();
+    } else if (key === 'Enter' || key === ' ') {
+      tiles[selected].click();
+    }
+  });
+
+  highlight();
+})();
+</script>
+
 </body>
 </html>
