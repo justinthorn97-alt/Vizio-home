@@ -49,30 +49,49 @@ a:focus, a:hover {
 <script>
 (function () {
   const tiles = Array.from(document.querySelectorAll('.grid a'));
-  const panel = document.createElement('div');
+  if (!tiles.length) return;
 
-  panel.style.cssText =
-    'position:fixed;top:10px;left:10px;z-index:99999;' +
-    'background:#111;color:#fff;padding:14px;border:3px solid #8db8ff;' +
-    'font:18px Arial;min-width:260px;border-radius:8px;';
+  let selected = 0;
+  const columns = 3;
 
-  panel.innerHTML =
-    '<b>REMOTE KEY TEST</b><div id="keyname">Press a remote button</div>' +
-    '<div id="keycode"></div><div id="keywhich"></div>';
-
-  document.body.appendChild(panel);
-
-  function showKey(e) {
-    document.getElementById('keyname').textContent = 'key: ' + e.key;
-    document.getElementById('keycode').textContent = 'code: ' + e.code;
-    document.getElementById('keywhich').textContent =
-      'keyCode: ' + (e.keyCode || e.which);
+  function highlight() {
+    tiles.forEach((tile, i) => {
+      tile.style.outline = i === selected ? '4px solid #8db8ff' : 'none';
+      tile.style.background = i === selected ? '#343e54' : '#242a38';
+    });
   }
 
-  document.addEventListener('keydown', showKey, true);
-  document.addEventListener('keyup', showKey, true);
+  document.addEventListener('keydown', function (e) {
+    switch (e.key) {
+      case 'ArrowRight':
+        selected = Math.min(selected + 1, tiles.length - 1);
+        break;
+      case 'ArrowLeft':
+        selected = Math.max(selected - 1, 0);
+        break;
+      case 'ArrowDown':
+        selected = Math.min(selected + columns, tiles.length - 1);
+        break;
+      case 'ArrowUp':
+        selected = Math.max(selected - columns, 0);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        tiles[selected].click();
+        return;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    highlight();
+  });
+
+  highlight();
 })();
 </script>
+
 
 
 </html>
