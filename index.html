@@ -1,1 +1,60 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My TV</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 4vw;
+  background: #10131b;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+h1 { font-size: clamp(30px, 5vw, 48px); margin: 0 0 8px; }
+p { color: #aab4c8; font-size: clamp(16px, 2vw, 22px); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 30px;
+  max-width: 1000px;
+}
+a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 18px 8px;
+  border: 2px solid #343e54;
+  border-radius: 14px;
+  background: #242a38;
+  color: white;
+  text-decoration: none;
+  font-size: clamp(16px, 2.3vw, 24px);
+}
+a:focus, a:hover {
+  outline: none;
+  border-color: #8db8ff;
+  background: #343e54;
+}
+.icon { font-size: clamp(32px, 5vw, 48px); margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<h1>MY TV</h1>
+<p>Your apps. Your layout. No recommendations.</p>
+<div class="grid">
+<a href="https://www.youtube.com/"><span class="icon">▶</span>YouTube</a>
+<a href="https://www.netflix.com/"><span class="icon">▣</span>Netflix</a>
+<a href="https://www.disneyplus.com/"><span class="icon">✦</span>Disney+</a>
+<a href="https://www.plex.tv/"><span class="icon">▶</span>Plex</a>
+<a href="https://open.spotify.com/"><span class="icon">♫</span>Music</a>
+<a href="https://www.google.com/"><span class="icon">⌕</span>Web</a>
+</div>
+</body>
+</html>
