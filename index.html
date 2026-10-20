@@ -52,6 +52,7 @@ a:focus, a:hover {
   if (!tiles.length) return;
 
   let selected = 0;
+  const cols = 3;
 
   function highlight() {
     tiles.forEach((tile, i) => {
@@ -60,58 +61,32 @@ a:focus, a:hover {
     });
   }
 
-  function move(direction) {
-    const current = tiles[selected].getBoundingClientRect();
-    let best = -1;
-    let bestScore = Infinity;
+  document.addEventListener('keydown', function (e) {
+    let k = e.key || '';
+    let c = e.keyCode || e.which;
 
-    tiles.forEach((tile, i) => {
-      if (i === selected) return;
-      const r = tile.getBoundingClientRect();
-      const dx = (r.left + r.width / 2) - (current.left + current.width / 2);
-      const dy = (r.top + r.height / 2) - (current.top + current.height / 2);
-
-      let primary, secondary;
-      if (direction === 'ArrowRight') {
-        if (dx <= 5) return;
-        primary = dx; secondary = Math.abs(dy);
-      } else if (direction === 'ArrowLeft') {
-        if (dx >= -5) return;
-        primary = -dx; secondary = Math.abs(dy);
-      } else if (direction === 'ArrowDown') {
-        if (dy <= 5) return;
-        primary = dy; secondary = Math.abs(dx);
-      } else {
-        if (dy >= -5) return;
-        primary = -dy; secondary = Math.abs(dx);
-      }
-
-      const score = primary + secondary * 2;
-      if (score < bestScore) {
-        bestScore = score;
-        best = i;
-      }
-    });
-
-    if (best >= 0) selected = best;
-    highlight();
-  }
-
-  document.addEventListener('keydown', function (event) {
-    if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(event.key)) {
-      event.preventDefault();
-      move(event.key);
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
+    if (k === 'ArrowRight' || c === 39) {
+      selected = Math.min(selected + 1, tiles.length - 1);
+    } else if (k === 'ArrowLeft' || c === 37) {
+      selected = Math.max(selected - 1, 0);
+    } else if (k === 'ArrowDown' || c === 40) {
+      selected = Math.min(selected + cols, tiles.length - 1);
+    } else if (k === 'ArrowUp' || c === 38) {
+      selected = Math.max(selected - cols, 0);
+    } else if (k === 'Enter' || c === 13) {
+      e.preventDefault();
       tiles[selected].click();
+      return;
+    } else {
+      return;
     }
+
+    e.preventDefault();
+    highlight();
   });
 
   highlight();
 })();
 </script>
 
-</script>
-
-</body>
 </html>
